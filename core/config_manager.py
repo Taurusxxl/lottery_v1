@@ -1,4 +1,4 @@
-# 系统配置管理\config_manager.py你好1110000
+# 系统配置管理\config_manager.py
 import os
 import json
 import logging
