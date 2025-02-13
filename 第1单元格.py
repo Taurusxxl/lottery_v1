@@ -1,8 +1,8 @@
-# 系统配置管理\config_manager.py
+#1 配置管理器\config_manager.py
 import os
 import json
 import logging
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 
 class ConfigManager:
     """配置管理器"""
@@ -35,8 +35,8 @@ class ConfigManager:
             
             # 训练配置
             self.TRAINING_CONFIG: dict = {
-                'max_epochs': 50,
-                'batch_size': 32
+                'max_epochs': 1,
+                'batch_size': 1
             }
             
             # 系统配置

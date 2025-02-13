@@ -1,12 +1,10 @@
-# 资源监控系统\resource_monitor.py
+#7 资源监控器\resource_monitor.py
 import psutil
 import logging
 import threading
 import time
 import numpy as np
 from collections import deque
-import os
-import tensorflow as tf
 from datetime import datetime
 
 # 获取logger实例

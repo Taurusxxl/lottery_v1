@@ -1,4 +1,4 @@
-# 系统健康检查\system_manager.py
+#9 系统检查\system_manager.py
 import os
 import psutil
 import logging
@@ -21,7 +21,7 @@ class SystemManager:
             cls._instance = super().__new__(cls)
         return cls._instance
     
-    def __init__(self, config):
+    def __init__(self):
         if not hasattr(self, 'initialized'):
             # 初始化监控器
             self.memory_monitor = MemoryMonitor()
@@ -38,9 +38,6 @@ class SystemManager:
             self.cleanup_interval = 300  # 5分钟执行一次清理
             self.initialized = True
             self.compatibility_checked = False
-            
-            self.config = config
-            self.logger = logging.getLogger(__name__)
             
             logger.info("系统管理器初始化完成")
     
@@ -154,36 +151,6 @@ class SystemManager:
         logger.info(f"自动安装依赖: {packages}")
         # 调用安装逻辑
         # ...
-
-    def initialize_data_pipeline(self):
-        """初始化数据管道"""
-        from core.data_manager import DataPipeline
-        self.data_pipeline = DataPipeline(self.config['data_path'])
-        self.logger.info("数据管道初始化完成")
-
-    def build_model_ensemble(self, model_type):
-        """构建模型集合"""
-        from models.model_ensemble import ModelEnsemble
-        self.ensemble = ModelEnsemble(
-            model_type=model_type,
-            config=self.config['models']
-        )
-        self.logger.info(f"{model_type}模型集合构建完成")
-
-    def start_training(self):
-        """启动训练流程"""
-        from optimizers.training_optimizer import TrainingOptimizer
-        optimizer = TrainingOptimizer(
-            model=self.ensemble,
-            config=self.config['training']
-        )
-        optimizer.train(self.data_pipeline)
-        self.logger.info("训练完成")
-
-    def run_prediction(self):
-        """执行预测"""
-        realtime_data = self.data_pipeline.load_realtime()
-        return self.ensemble.predict(realtime_data)
 
 class MemoryMonitor:
     def check_memory(self):

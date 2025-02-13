@@ -1,4 +1,4 @@
-# 日期处理工具\date_utils.py
+#2 日期处理工具\date_utils.py
 from datetime import datetime, timedelta
 import re
 
@@ -21,4 +21,4 @@ def get_next_issue(current_issue):
         new_date = date
         new_period = period + 1
     
-    return f"{new_date.strftime('%Y%m%d')}-{new_period:04d}" 
+    return f"{new_date.strftime('%Y%m%d')}-{new_period:04d}"

@@ -1,4 +1,4 @@
-# 动态调整策略\dynamic_optimizer.py
+#14 动态调整策略\dynamic_optimizer.py
 import numpy as np
 import tensorflow as tf
 import logging
@@ -185,3 +185,6 @@ class DynamicOptimizer:
         filename = f"dynamic_params_{timestamp}.json"
         with open(os.path.join(config_manager.MODEL_DIR, filename), 'w') as f:
             json.dump(self.best_params, f)
+
+# 创建全局实例
+dynamic_optimizer = DynamicOptimizer(model_ensemble=None, performance_monitor=None)

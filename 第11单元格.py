@@ -1,4 +1,4 @@
-# 集成模型实例化\model_ensemble.py
+#11 集成模型类\model_ensemble.py
 import numpy as np
 import tensorflow as tf
 import logging

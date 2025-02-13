@@ -1,7 +1,6 @@
-# 日志系统初始化\logging_manager.py
+#4 日志系统初始化\logging_manager.py
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # 添加项目根目录到路径
 import logging
 import logging.handlers
 from datetime import datetime
@@ -9,8 +8,8 @@ from collections import deque
 from IPython.display import clear_output
 from pathlib import Path
 
-# 从配置管理器获取基础配置
-from .config_manager import LOG_DIR
+# 直接使用配置管理器中的 LOG_DIR
+from core.config_manager import LOG_DIR  # 修改导入路径
 
 class DailyRotatingFileHandler(logging.FileHandler):
     """每日自动分文件的日志处理器"""

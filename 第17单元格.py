@@ -1,4 +1,4 @@
-# 训练策略优化\training_optimizer.py
+#17 训练策略优化器\training_optimizer.py
 import numpy as np
 from bayes_opt import BayesianOptimization
 from bayes_opt.util import Events

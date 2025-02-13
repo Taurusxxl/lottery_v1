@@ -1,4 +1,4 @@
-# 数据优化策略\data_optimizer.py
+#12 数据优化策略\data_optimizer.py
 import numpy as np
 from scipy import stats
 from statsmodels.tsa.stattools import adfuller
@@ -45,10 +45,10 @@ class DataOptimizer:
             # 2. 计算特征间的平均相关性
             # 去除对角线上的1
             mask = ~np.eye(corr_matrix.shape[0], dtype=bool)
-            mean_correlation = np.abs(corr_matrix[mask]).mean()
+            avg_correlation = np.mean(np.abs(corr_matrix[mask]))
             
-            # 3. 计算相关性得分（避免特征间过度相关或完全不相关）
-            correlation_score = 1 - np.abs(mean_correlation - 0.5)
+            # 3. 计算相关性得分
+            correlation_score = 1 - avg_correlation  # 越小越好
             
             return correlation_score
             

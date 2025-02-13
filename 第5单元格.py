@@ -1,5 +1,4 @@
-# 数据库连接池\database_manager.py
-
+#5 数据库管理器\database_manager.py
 import pymysql
 import logging
 import threading
@@ -138,4 +137,4 @@ class DatabaseManager:
         return self.execute_query(query, (start_issue, limit))
 
 # 创建全局实例
-db_manager = DatabaseManager() 
+db_manager = DatabaseManager()

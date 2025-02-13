@@ -1,4 +1,4 @@
-# 数据管道构建\data_manager.py888888888
+#6 数据管道构建\data_manager.py
 import os
 import numpy as np
 import pandas as pd

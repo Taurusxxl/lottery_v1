@@ -1,4 +1,4 @@
-# 模型结构定义\model_config.py
+#10 模型配置管理\model_config.py
 import os
 import json
 import logging
