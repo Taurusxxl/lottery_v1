@@ -147,7 +147,8 @@ class LoggingManager:
     
     def _configure_logging(self):
         """配置日志系统"""
-        BASE_DIR = Path(__file__).parent.parent
+        # 使用之前定义的LOG_DIR
+        BASE_DIR = Path(LOG_DIR)
         logging.basicConfig(
             level=logging.INFO,
             format='%(asctime)s [%(levelname)s] %(name)s - %(message)s',
