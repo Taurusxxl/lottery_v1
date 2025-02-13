@@ -8,8 +8,9 @@ from collections import deque
 from IPython.display import clear_output
 from pathlib import Path
 
-# 直接使用配置管理器中的 LOG_DIR
-from core.config_manager import LOG_DIR  # 修改导入路径
+# 定义日志目录
+LOG_DIR = os.path.join('D:', 'JupyterWork', 'logs')
+os.makedirs(LOG_DIR, exist_ok=True)
 
 class DailyRotatingFileHandler(logging.FileHandler):
     """每日自动分文件的日志处理器"""
