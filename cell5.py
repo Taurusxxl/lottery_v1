@@ -5,7 +5,7 @@ import threading
 from pymysql.cursors import DictCursor
 from sqlalchemy.pool import QueuePool  # 使用SQLAlchemy自带的连接池
 from datetime import datetime, timedelta
-from core.config_manager import config_instance
+from cell1 import ConfigManager  # 修改导入方式
 
 # 获取logger实例
 logger = logging.getLogger(__name__)
