@@ -159,31 +159,28 @@ class ModelEnsemble:
             raise
             
     def _build_model(self, model_num, params):
-        """构建增强版单个模型"""
-        try:
-            inputs = tf.keras.Input(shape=(self.sequence_length, self.feature_dim))
-            
-            # 1. 基础特征提取
-            x = self._build_basic_features(inputs)
-            
-            # 2. 高级特征分析
-            advanced_features = self._build_advanced_features(inputs)
-            
-            # 3. 特征融合
-            x = tf.keras.layers.Concatenate()([x, advanced_features])
-            
-            # 4. 深度特征提取
-            x = self._build_deep_features(x, params)
-            
-            # 5. 预测头
-            outputs = self._build_prediction_head(x)
-            
-            return Model(inputs=inputs, outputs=outputs)
-            
-        except Exception as e:
-            logger.error(f"构建模型 {model_num} 时出错: {str(e)}")
-            raise
-
+        """构建单个模型"""
+        logger.info(f"正在构建模型{model_num}的基础特征层...")
+        inputs = tf.keras.Input(shape=(self.sequence_length, self.feature_dim))
+        
+        # 1. 基础特征提取
+        x = self._build_basic_features(inputs)
+        
+        logger.info(f"正在构建模型{model_num}的高级特征层...")
+        # 2. 高级特征分析
+        advanced_features = self._build_advanced_features(inputs)
+        
+        # 3. 特征融合
+        x = tf.keras.layers.Concatenate()([x, advanced_features])
+        
+        # 4. 深度特征提取
+        x = self._build_deep_features(x, params)
+        
+        # 5. 预测头
+        outputs = self._build_prediction_head(x)
+        
+        return Model(inputs=inputs, outputs=outputs)
+        
     def _add_positional_encoding(self, x):
         """添加位置编码"""
         seq_len = tf.shape(x)[1]
@@ -370,6 +367,43 @@ class ModelEnsemble:
         except Exception as e:
             logger.error(f"获取集成预测时出错: {str(e)}")
             return None
+
+    def _build_basic_features(self, inputs):
+        """构建基础特征层"""
+        x = tf.keras.layers.Conv1D(
+            filters=64, 
+            kernel_size=3, 
+            activation='relu'
+        )(inputs)
+        return tf.keras.layers.BatchNormalization()(x)
+    
+    def _build_advanced_features(self, inputs):
+        """构建高级特征层"""
+        # 添加注意力机制
+        attention = tf.keras.layers.Attention()([inputs, inputs])
+        # 添加LSTM层
+        lstm_out = tf.keras.layers.LSTM(128, return_sequences=True)(attention)
+        return tf.keras.layers.Dropout(0.3)(lstm_out)
+    
+    def _build_attention_layer(self, x):
+        """构建注意力层"""
+        query = tf.keras.layers.Dense(64)(x)
+        key = tf.keras.layers.Dense(64)(x)
+        attention = tf.keras.layers.Attention()([query, key])
+        return tf.keras.layers.Concatenate()([x, attention])
+    
+    def _build_transformer_block(self, x, num_heads=4):
+        """构建Transformer块"""
+        # 多头注意力
+        attention_output = tf.keras.layers.MultiHeadAttention(
+            num_heads=num_heads, 
+            key_dim=64
+        )(x, x)
+        # 前馈网络
+        x = tf.keras.layers.Add()([x, attention_output])
+        x = tf.keras.layers.LayerNormalization()(x)
+        x = tf.keras.layers.Dense(64, activation='gelu')(x)
+        return x
 
     def _build_advanced_features(self, x):
         """构建高级特征分析"""

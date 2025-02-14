@@ -205,3 +205,38 @@
 2025-02-14 20:27:34,108 [INFO] __main__ - 清理资源...
 2025-02-14 20:27:39,105 [INFO] cell7 - 资源监控器已停止
 2025-02-14 20:27:39,107 [INFO] cell8 - 性能监控器已停止
+2025-02-14 20:34:36,254 [INFO] __main__ - 数据库连接池创建成功
+2025-02-14 20:34:36,255 [INFO] __main__ - 数据库管理器初始化完成
+2025-02-14 20:34:36,751 [INFO] cell5 - 数据库连接池创建成功
+2025-02-14 20:34:36,752 [INFO] cell5 - 数据库管理器初始化完成
+2025-02-14 20:34:36,756 [INFO] __main__ - 数据管理器初始化完成
+2025-02-14 20:34:36,772 [INFO] __main__ - 资源监控器初始化完成
+2025-02-14 20:34:36,841 [INFO] __main__ - 系统管理器初始化完成
+2025-02-14 20:34:37,201 [WARNING] py.warnings - D:\ruanjiananzhuang\anaconda\envs\ace\Lib\site-packages\tqdm\auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+
+2025-02-14 20:34:40,627 [INFO] __main__ - 动态优化器初始化完成
+2025-02-14 20:34:40,721 [INFO] __main__ - 状态管理器初始化完成
+2025-02-14 20:34:40,793 [INFO] __main__ - 训练优化器初始化完成
+2025-02-14 20:34:40,808 [INFO] __main__ - 配置系统测试通过
+2025-02-14 20:34:40,838 [INFO] cell6 - 数据管理器初始化完成
+2025-02-14 20:34:40,841 [INFO] cell7 - 资源监控器初始化完成
+2025-02-14 20:34:40,847 [INFO] cell14 - 动态优化器初始化完成
+2025-02-14 20:34:40,849 [INFO] cell16 - 状态管理器初始化完成
+2025-02-14 20:34:40,852 [INFO] __main__ - 正在初始化系统...
+2025-02-14 20:34:40,853 [INFO] __main__ - 启动系统监控...
+2025-02-14 20:34:40,855 [INFO] cell7 - 资源监控器初始化完成
+2025-02-14 20:34:40,863 [INFO] cell7 - 资源监控器已启动
+2025-02-14 20:34:40,864 [INFO] cell8 - 性能监控器已启动
+2025-02-14 20:34:40,865 [INFO] __main__ - 正在加载数据...
+2025-02-14 20:34:40,866 [INFO] __main__ - 正在初始化模型...
+2025-02-14 20:34:40,867 [INFO] cell11 - 构建模型 1/6...
+2025-02-14 20:34:41,122 [WARNING] tensorflow - From D:\ruanjiananzhuang\anaconda\envs\ace\Lib\site-packages\keras\src\backend.py:1398: The name tf.executing_eagerly_outside_functions is deprecated. Please use tf.compat.v1.executing_eagerly_outside_functions instead.
+
+2025-02-14 20:34:41,137 [ERROR] cell11 - 构建模型 1 时出错: 'ModelEnsemble' object has no attribute '_build_basic_features'
+2025-02-14 20:34:41,138 [ERROR] cell11 - 构建模型时出错: 'ModelEnsemble' object has no attribute '_build_basic_features'
+2025-02-14 20:34:41,139 [ERROR] __main__ - 运行出错: 'ModelEnsemble' object has no attribute '_build_basic_features'
+2025-02-14 20:34:41,140 [INFO] __main__ - 清理资源...
+2025-02-14 20:34:45,864 [INFO] cell7 - 资源监控器已停止
+2025-02-14 20:34:45,866 [INFO] cell8 - 性能监控器已停止
+2025-02-14 20:34:45,867 [INFO] cell5 - 已关闭所有数据库连接
