@@ -27,27 +27,13 @@ if version.parse(bo_version) >= version.parse("1.3"):
 else:
     from bayes_opt import Events  # 统一导入方式
 
-# 检查是否有非常规导入方式
-from bayesian_optimization import ...  # 正常情况
-# 或
-from bayes_opt import ...  # 需要对应不同版本
-
 # 动态导入BayesianOptimization
 def load_bayesian_optimization():
     try:
         from bayesian_optimization import BayesianOptimization
         return BayesianOptimization
     except ImportError:
-        try:
-            from bayes_opt import BayesianOptimization
-            return BayesianOptimization
-        except ImportError as e:
-            raise ImportError(
-                "无法导入BayesianOptimization，请执行：\n"
-                "!conda install -c conda-forge bayesian-optimization=1.2.0\n"
-                "或\n"
-                "!pip install --force-reinstall bayesian-optimization==1.2.0"
-            ) from e
+        return None  # 如果不存在则返回None
 
 BayesianOptimization = load_bayesian_optimization()
 
