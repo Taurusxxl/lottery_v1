@@ -33,3 +33,49 @@
 2025-02-14 15:43:43,614 [INFO] __main__ - 数据管理器初始化完成
 2025-02-14 15:43:43,629 [INFO] __main__ - 资源监控器初始化完成
 2025-02-14 15:43:43,694 [INFO] __main__ - 系统管理器初始化完成
+2025-02-14 16:47:57,267 [INFO] __main__ - 数据库连接池创建成功
+2025-02-14 16:47:57,268 [INFO] __main__ - 数据库管理器初始化完成
+2025-02-14 16:47:57,315 [INFO] __main__ - 数据管理器初始化完成
+2025-02-14 16:47:57,332 [INFO] __main__ - 资源监控器初始化完成
+2025-02-14 16:47:57,403 [INFO] __main__ - 系统管理器初始化完成
+2025-02-14 17:00:27,931 [INFO] __main__ - 数据库连接池创建成功
+2025-02-14 17:00:27,932 [INFO] __main__ - 数据库管理器初始化完成
+2025-02-14 17:00:28,680 [INFO] cell5 - 数据库连接池创建成功
+2025-02-14 17:00:28,681 [INFO] cell5 - 数据库管理器初始化完成
+2025-02-14 17:00:28,686 [INFO] __main__ - 数据管理器初始化完成
+2025-02-14 17:00:28,704 [INFO] __main__ - 资源监控器初始化完成
+2025-02-14 17:00:28,769 [INFO] __main__ - 系统管理器初始化完成
+2025-02-14 17:00:29,199 [WARNING] py.warnings - D:\ruanjiananzhuang\anaconda\envs\ace\Lib\site-packages\tqdm\auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+
+2025-02-14 18:13:21,581 [INFO] __main__ - 数据库连接池创建成功
+2025-02-14 18:13:21,581 [INFO] __main__ - 数据库管理器初始化完成
+2025-02-14 18:13:22,406 [INFO] cell5 - 数据库连接池创建成功
+2025-02-14 18:13:22,406 [INFO] cell5 - 数据库管理器初始化完成
+2025-02-14 18:13:22,409 [INFO] __main__ - 数据管理器初始化完成
+2025-02-14 18:13:22,435 [INFO] __main__ - 资源监控器初始化完成
+2025-02-14 18:13:22,517 [INFO] __main__ - 系统管理器初始化完成
+2025-02-14 18:13:22,991 [WARNING] py.warnings - D:\ruanjiananzhuang\anaconda\envs\ace\Lib\site-packages\tqdm\auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+
+2025-02-14 18:14:04,953 [INFO] __main__ - 数据库连接池创建成功
+2025-02-14 18:14:04,954 [INFO] __main__ - 数据库管理器初始化完成
+2025-02-14 18:14:05,442 [INFO] cell5 - 数据库连接池创建成功
+2025-02-14 18:14:05,443 [INFO] cell5 - 数据库管理器初始化完成
+2025-02-14 18:14:05,446 [INFO] __main__ - 数据管理器初始化完成
+2025-02-14 18:14:05,466 [INFO] __main__ - 资源监控器初始化完成
+2025-02-14 18:14:05,526 [INFO] __main__ - 系统管理器初始化完成
+2025-02-14 18:14:05,881 [WARNING] py.warnings - D:\ruanjiananzhuang\anaconda\envs\ace\Lib\site-packages\tqdm\auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+
+2025-02-14 18:26:12,750 [INFO] __main__ - 数据库连接池创建成功
+2025-02-14 18:26:12,752 [INFO] __main__ - 数据库管理器初始化完成
+2025-02-14 18:26:13,641 [INFO] cell5 - 数据库连接池创建成功
+2025-02-14 18:26:13,642 [INFO] cell5 - 数据库管理器初始化完成
+2025-02-14 18:26:13,646 [INFO] __main__ - 数据管理器初始化完成
+2025-02-14 18:26:13,675 [INFO] __main__ - 资源监控器初始化完成
+2025-02-14 18:26:13,759 [INFO] __main__ - 系统管理器初始化完成
+2025-02-14 18:26:14,272 [WARNING] py.warnings - D:\ruanjiananzhuang\anaconda\envs\ace\Lib\site-packages\tqdm\auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+
+2025-02-14 18:26:17,675 [INFO] __main__ - 动态优化器初始化完成

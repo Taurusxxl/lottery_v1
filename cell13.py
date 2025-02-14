@@ -12,6 +12,7 @@ from packaging import version
 import bayes_opt
 import optuna
 import importlib
+from bayes_opt.logger import Events  # 正确位置
 
 # 获取logger实例
 logger = logging.getLogger(__name__)
