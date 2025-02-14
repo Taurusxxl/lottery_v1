@@ -8,8 +8,8 @@ from tensorflow.keras.layers import MultiHeadAttention, LayerNormalization, Add
 import os
 import json
 import threading
-from core import config_manager
-from optimizers import model_optimizer
+from cell1 import config_instance
+from cell13 import model_optimizer
 from concurrent.futures import ThreadPoolExecutor
 import torch
 
@@ -1190,7 +1190,7 @@ class ModelEnsemble:
         """补全并行训练逻辑"""
         try:
             # 根据当前线程数调整
-            with ThreadPoolExecutor(max_workers=config_manager.SYSTEM_CONFIG['max_threads']) as executor:
+            with ThreadPoolExecutor(max_workers=config_instance.SYSTEM_CONFIG['max_threads']) as executor:
                 # 动态分配任务
                 chunk_size = len(data) // self.threads
                 futures = []
@@ -1255,7 +1255,7 @@ class ModelEnsemble:
 
     def save_model(self, model_idx):
         model = self.models[model_idx]
-        model.save(os.path.join(config_manager.MODEL_DIR, f'model_{model_idx}')) 
+        model.save(os.path.join(config_instance.MODEL_DIR, f'model_{model_idx}')) 
 
     def save_ensemble_info(self):
         with open('ensemble_info.json', 'w') as f:
