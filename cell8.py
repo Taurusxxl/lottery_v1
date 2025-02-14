@@ -48,6 +48,9 @@ class PerformanceMonitor:
         
         os.makedirs(self.save_dir, exist_ok=True)
         
+        self._running = False
+        self._thread = threading.Thread(target=self._monitor_loop)
+        
     def _init_log_file(self):
         """初始化性能日志文件"""
         try:
@@ -355,6 +358,24 @@ class PerformanceMonitor:
         except Exception as e:
             logger.error(f"分析性能趋势时出错: {str(e)}")
             return None
+
+    def start(self):
+        """启动监控线程"""
+        self._running = True
+        self._thread.start()
+        logger.info("性能监控器已启动")
+    
+    def stop(self):
+        """停止监控线程"""
+        self._running = False
+        self._thread.join()
+        logger.info("性能监控器已停止")
+    
+    def _monitor_loop(self):
+        """监控主循环"""
+        while self._running:
+            # 这里添加实际的监控逻辑
+            time.sleep(1)  # 每秒采集一次数据
 
 # 创建全局实例
 performance_monitor = PerformanceMonitor(save_dir='logs/performance')

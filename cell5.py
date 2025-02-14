@@ -138,5 +138,11 @@ class DatabaseManager:
         """
         return self.execute_query(query, (start_issue, limit))
 
+    def close_all(self):
+        """关闭所有数据库连接"""
+        if self.pool:
+            self.pool.closeall()
+            logger.info("已关闭所有数据库连接")
+
 # 创建全局实例
 db_manager = DatabaseManager()

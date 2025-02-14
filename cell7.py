@@ -37,8 +37,8 @@ class ResourceMonitor:
         }
         
         # 监控线程
-        self.monitor_thread = None
-        self.is_running = False
+        self._running = False
+        self._thread = threading.Thread(target=self._monitor_loop)
         
         # 警报历史
         self.alerts = []
@@ -51,26 +51,24 @@ class ResourceMonitor:
     
     def start(self):
         """启动资源监控"""
-        if self.monitor_thread and self.monitor_thread.is_alive():
+        if self._thread.is_alive():
             logger.warning("资源监控器已在运行")
             return
             
-        self.is_running = True
-        self.monitor_thread = threading.Thread(target=self._monitor_loop)
-        self.monitor_thread.daemon = True
-        self.monitor_thread.start()
+        self._running = True
+        self._thread.start()
         logger.info("资源监控器已启动")
     
     def stop(self):
         """停止资源监控"""
-        self.is_running = False
-        if self.monitor_thread:
-            self.monitor_thread.join()
+        self._running = False
+        if self._thread:
+            self._thread.join()
         logger.info("资源监控器已停止")
     
     def _monitor_loop(self):
         """监控循环"""
-        while self.is_running:
+        while self._running:
             try:
                 self._collect_metrics()
                 self._check_alerts()
