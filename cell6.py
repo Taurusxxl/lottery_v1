@@ -53,6 +53,18 @@ class DataManager:
             
             # 获取配置参数
             self.normalize_range = config_instance.SYSTEM_CONFIG['DATA_CONFIG']['normalize_range']
+            
+            self._init_data_loader()
+            
+    def _init_data_loader(self):
+        """初始化数据加载器"""
+        self.data_cache = {}
+        self.batch_size = 32
+    
+    def load_training_data(self):
+        """加载训练数据"""
+        # 示例数据加载逻辑
+        return []
     
     def get_training_batch(self, batch_size=None):
         """获取训练批次"""

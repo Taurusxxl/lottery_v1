@@ -141,7 +141,7 @@ class DatabaseManager:
     def close_all(self):
         """关闭所有数据库连接"""
         if self.pool:
-            self.pool.closeall()
+            self.pool.dispose()
             logger.info("已关闭所有数据库连接")
 
 # 创建全局实例

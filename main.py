@@ -73,6 +73,7 @@ def main():
         
         # 3. 加载数据
         logger.info("正在加载数据...")
+        data_manager._init_data_loader()
         train_data = data_manager.load_training_data()
         
         # 4. 创建模型和优化器

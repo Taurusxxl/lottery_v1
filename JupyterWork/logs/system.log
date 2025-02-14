@@ -177,3 +177,31 @@
 2025-02-14 20:16:52,508 [INFO] cell7 - 资源监控器已启动
 2025-02-14 20:16:52,509 [ERROR] __main__ - 运行出错: 'PerformanceMonitor' object has no attribute 'start'
 2025-02-14 20:16:52,509 [INFO] __main__ - 清理资源...
+2025-02-14 20:27:30,030 [INFO] __main__ - 数据库连接池创建成功
+2025-02-14 20:27:30,031 [INFO] __main__ - 数据库管理器初始化完成
+2025-02-14 20:27:30,512 [INFO] cell5 - 数据库连接池创建成功
+2025-02-14 20:27:30,513 [INFO] cell5 - 数据库管理器初始化完成
+2025-02-14 20:27:30,517 [INFO] __main__ - 数据管理器初始化完成
+2025-02-14 20:27:30,534 [INFO] __main__ - 资源监控器初始化完成
+2025-02-14 20:27:30,601 [INFO] __main__ - 系统管理器初始化完成
+2025-02-14 20:27:30,951 [WARNING] py.warnings - D:\ruanjiananzhuang\anaconda\envs\ace\Lib\site-packages\tqdm\auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+
+2025-02-14 20:27:33,929 [INFO] __main__ - 动态优化器初始化完成
+2025-02-14 20:27:33,988 [INFO] __main__ - 状态管理器初始化完成
+2025-02-14 20:27:34,043 [INFO] __main__ - 训练优化器初始化完成
+2025-02-14 20:27:34,054 [INFO] __main__ - 配置系统测试通过
+2025-02-14 20:27:34,074 [INFO] cell6 - 数据管理器初始化完成
+2025-02-14 20:27:34,079 [INFO] cell7 - 资源监控器初始化完成
+2025-02-14 20:27:34,089 [INFO] cell14 - 动态优化器初始化完成
+2025-02-14 20:27:34,091 [INFO] cell16 - 状态管理器初始化完成
+2025-02-14 20:27:34,094 [INFO] __main__ - 正在初始化系统...
+2025-02-14 20:27:34,095 [INFO] __main__ - 启动系统监控...
+2025-02-14 20:27:34,096 [INFO] cell7 - 资源监控器初始化完成
+2025-02-14 20:27:34,103 [INFO] cell7 - 资源监控器已启动
+2025-02-14 20:27:34,104 [INFO] cell8 - 性能监控器已启动
+2025-02-14 20:27:34,106 [INFO] __main__ - 正在加载数据...
+2025-02-14 20:27:34,107 [ERROR] __main__ - 运行出错: 'DataManager' object has no attribute 'load_training_data'
+2025-02-14 20:27:34,108 [INFO] __main__ - 清理资源...
+2025-02-14 20:27:39,105 [INFO] cell7 - 资源监控器已停止
+2025-02-14 20:27:39,107 [INFO] cell8 - 性能监控器已停止
