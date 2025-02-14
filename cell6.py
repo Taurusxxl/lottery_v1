@@ -9,8 +9,8 @@ import threading
 from collections import deque
 from sklearn.preprocessing import MinMaxScaler
 import tensorflow as tf
-from core.database_manager import db_manager  # 导入数据库管理器实例
-from core.config_manager import config_instance  # 导入配置管理器实例
+from cell5 import db_manager  # 修改导入方式
+from cell1 import config_instance  # 修改导入方式
 
 # 获取logger实例
 logger = logging.getLogger(__name__)
