@@ -1303,3 +1303,39 @@ class ModelEnsemble:
             # 添加device参数适配CPU
             model = torch.load(path, map_location=torch.device('cpu'))  
             self.models.append(model) 
+
+    def _analyze_frequency(self, x, window_sizes=[100, 500, 1000]):
+        """号码频率统计"""
+        try:
+            features = []
+            
+            # 1. 基础频率统计
+            for window in window_sizes:
+                # 滑动窗口统计
+                recent = x[:, -window:]
+                counts = tf.math.bincount(tf.cast(tf.reshape(recent, [-1]), tf.int32), minlength=10, maxlength=10)
+                features.append(counts / tf.cast(tf.size(recent), tf.float32))
+            
+            # 2. 频率变化趋势
+            trend_features = []
+            for num in range(10):
+                # 计算每个号码的出现次数移动平均
+                mask = tf.cast(tf.equal(x, num), tf.float32)
+                ma_5 = tf.reduce_mean(mask[:, -5:], axis=1)
+                ma_20 = tf.reduce_mean(mask[:, -20:], axis=1)
+                trend_features.append(ma_5 - ma_20)  # 5期与20期均值差
+                
+            features.append(tf.stack(trend_features, axis=1))
+            
+            # 3. 高频/低频号码标记
+            total_counts = tf.math.bincount(tf.cast(tf.reshape(x, [-1]), tf.int32), minlength=10, maxlength=10)
+            median = tf.math.reduce_median(total_counts)
+            high_freq_mask = tf.cast(total_counts > median, tf.float32)
+            low_freq_mask = 1 - high_freq_mask
+            features.extend([high_freq_mask, low_freq_mask])
+            
+            return tf.keras.layers.Concatenate()(features)
+            
+        except Exception as e:
+            logger.error(f"频率分析出错: {str(e)}")
+            return tf.zeros_like(x) 
