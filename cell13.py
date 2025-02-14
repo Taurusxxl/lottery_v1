@@ -27,15 +27,8 @@ if version.parse(bo_version) >= version.parse("1.3"):
 else:
     from bayes_opt import Events  # 统一导入方式
 
-# 动态导入BayesianOptimization
-def load_bayesian_optimization():
-    try:
-        from bayesian_optimization import BayesianOptimization
-        return BayesianOptimization
-    except ImportError:
-        return None  # 如果不存在则返回None
-
-BayesianOptimization = load_bayesian_optimization()
+# 直接导入新版
+from bayes_opt import BayesianOptimization
 
 # 性能优化配置
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '1'  # 启用OneDNN优化
@@ -306,8 +299,15 @@ model_optimizer = ModelOptimizer(model_ensemble=None, data_processor=None)
 # 使用Optuna替代
 study = optuna.create_study()
 
-# 统一导入方式
+# 修改后的导入部分
 try:
-    from bayes_opt import BayesianOptimization  # 实际包名
-except ImportError:
-    raise ImportError("请执行：conda install -c conda-forge bayesian-optimization=1.2.0") 
+    from bayes_opt import BayesianOptimization
+    from bayes_opt.logger import JSONLogger
+    from bayes_opt.util import load_logs
+except ImportError as e:
+    raise ImportError(
+        "请安装最新版贝叶斯优化库：\n"
+        "pip install bayesian-optimization\n"
+        "或使用conda：\n"
+        "conda install -c conda-forge bayesian-optimization"
+    ) from e 
