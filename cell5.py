@@ -30,7 +30,6 @@ class DatabaseManager:
             
             # 添加必要的数据库配置
             self.DB_CONFIG.update({
-                'password': 'tt198803',
                 'database': 'admin_data',
                 'charset': 'utf8mb4'
             })

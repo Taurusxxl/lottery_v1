@@ -29,8 +29,9 @@ class ConfigManager:
             # 数据库配置
             self.DB_CONFIG: dict = {
                 'host': 'localhost',
-                'port': 5432,
-                'user': 'ace_user'
+                'user': 'root',  # 修改为MySQL用户
+                'port': 3306,    # 修改为MySQL端口
+                'password': 'tt198803'  # 添加密码
             }
             
             # 训练配置
