@@ -7,6 +7,8 @@ from typing import Optional, Any, Dict
 from collections import deque
 from datetime import datetime
 import torch
+from bayes_opt.logger import Events  # 拆分导入
+from bayes_opt.util import load_logs
 
 # 获取logger实例
 logger = logging.getLogger(__name__)

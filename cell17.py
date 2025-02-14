@@ -1,7 +1,7 @@
 #17 训练策略优化器\training_optimizer.py
 import numpy as np
 from bayes_opt import BayesianOptimization
-from bayes_opt.util import Events
+from bayes_opt.logger import Events
 import tensorflow as tf
 import logging
 import os

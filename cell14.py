@@ -3,6 +3,7 @@ import numpy as np
 import tensorflow as tf
 import logging
 from bayes_opt import BayesianOptimization
+from bayes_opt.logger import Events
 import json
 import os
 from datetime import datetime
