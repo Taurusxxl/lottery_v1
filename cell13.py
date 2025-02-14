@@ -298,7 +298,11 @@ class ModelOptimizer:
 model_optimizer = ModelOptimizer(model_ensemble=None, data_processor=None)
 
 # 使用Optuna替代
-study = optuna.create_study()
+study = optuna.create_study(
+    study_name="model_optim_v1",
+    storage="sqlite:///optuna.db",
+    load_if_exists=True
+)
 
 # 修改后的导入部分
 try:

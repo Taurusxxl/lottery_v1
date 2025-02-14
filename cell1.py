@@ -71,6 +71,13 @@ class ConfigManager:
                 }
             }
             
+            # 在配置中添加
+            self.OPTUNA_CONFIG = {
+                "storage": "sqlite:///optuna.db",
+                "study_name": "prod_study_v1",
+                "timeout": 3600  # 设置优化超时
+            }
+            
             self.initialized = True
     
     def get_db_config(self) -> Dict[str, str]:
