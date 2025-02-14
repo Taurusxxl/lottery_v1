@@ -1,4 +1,4 @@
-#1 配置管理器\config_manager.py22222
+#1 配置管理器\config_manager.py
 import os
 import json
 import logging
