@@ -24,13 +24,16 @@ class DatabaseManager:
     
     def __init__(self, db_config=None):
         if not hasattr(self, 'initialized'):
-            self.DB_CONFIG = {
-                'host': 'localhost',
-                'user': 'root',
+            # 使用ConfigManager的配置
+            config_instance = ConfigManager()
+            self.DB_CONFIG = config_instance.get_db_config()
+            
+            # 添加必要的数据库配置
+            self.DB_CONFIG.update({
                 'password': 'tt198803',  # 使用提供的密码
                 'database': 'admin_data',
                 'charset': 'utf8mb4'
-            }
+            })
             
             # 创建数据库连接池
             self.pool = self._create_pool()
