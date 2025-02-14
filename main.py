@@ -1,3 +1,4 @@
+# 主程序入口
 import logging
 from datetime import datetime
 import os
@@ -17,8 +18,13 @@ from cell16 import StateManager
 
 def setup_monitoring():
     """初始化监控系统"""
+    # 从配置获取保存目录
+    config = ConfigManager()
+    save_dir = os.path.join(config.BASE_DIR, 'performance_records')
+    os.makedirs(save_dir, exist_ok=True)
+
     resource_monitor = ResourceMonitor()
-    performance_monitor = PerformanceMonitor()
+    performance_monitor = PerformanceMonitor(save_dir=save_dir)
     
     # 启动监控
     resource_monitor.start()
@@ -119,8 +125,10 @@ def main():
     finally:
         # 清理资源
         logger.info("清理资源...")
-        resource_monitor.stop()
-        perf_monitor.stop()
+        if 'resource_monitor' in locals():
+            resource_monitor.stop()
+        if 'perf_monitor' in locals():
+            perf_monitor.stop()
         db_manager.close_all()
 
 if __name__ == "__main__":

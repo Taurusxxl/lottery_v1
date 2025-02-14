@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 class PerformanceMonitor:
     """性能监控器 - 负责收集和分析性能指标"""
-    def __init__(self, save_dir, window_size=100):
+    def __init__(self, save_dir: str, window_size=100):
         self.save_dir = save_dir
         self.window_size = window_size
         self.lock = threading.Lock()
@@ -45,6 +45,8 @@ class PerformanceMonitor:
         
         # 初始化性能日志文件
         self._init_log_file()
+        
+        os.makedirs(self.save_dir, exist_ok=True)
         
     def _init_log_file(self):
         """初始化性能日志文件"""
