@@ -4,7 +4,7 @@ import json
 import logging
 from typing import Dict, Any, Optional
 import tensorflow as tf
-from core import config_manager
+from cell1 import config_instance  # 修改后的导入
 
 # 获取logger实例
 logger = logging.getLogger(__name__)
@@ -21,7 +21,7 @@ class ModelConfig:
         """
         self.config_path = config_path
         self.config = self._load_config()
-        self.sequence_length = config_manager.SYSTEM_CONFIG['SAMPLE_CONFIG']['input_length']
+        self.sequence_length = config_instance.SYSTEM_CONFIG['SAMPLE_CONFIG']['input_length']
         
     def _load_config(self) -> Dict[str, Any]:
         """加载配置"""
@@ -41,7 +41,7 @@ class ModelConfig:
     
     def _get_default_config(self) -> Dict[str, Any]:
         """获取默认配置"""
-        sample_cfg = config_manager.SYSTEM_CONFIG['SAMPLE_CONFIG']
+        sample_cfg = config_instance.SYSTEM_CONFIG['SAMPLE_CONFIG']
         return {
             # 1. 基础配置
             'base_config': {
