@@ -11,7 +11,7 @@ from sklearn.preprocessing import MinMaxScaler
 import tensorflow as tf
 from sqlalchemy.pool import QueuePool
 from pymysql.cursors import DictCursor
-from cell1 import config_instance
+from cell1_core import config
 import pickle
 
 # 获取logger实例
@@ -32,7 +32,7 @@ class DataManager:
     def __init__(self):
         if not hasattr(self, 'initialized'):
             # 初始化数据库配置
-            self.DB_CONFIG = self._init_db_config()
+            self.DB_CONFIG = config.DB_CONFIG
             
             # 初始化连接池
             self.pool = self._create_pool()
@@ -48,7 +48,10 @@ class DataManager:
             self.cache_timeout = 300  # 5分钟缓存超时
             
             # 初始化数据配置
-            self._init_data_config()
+            self.cache_size = config.DATA_CONFIG['cache_size']
+            self.batch_size = config.DATA_CONFIG['batch_size']
+            self.sequence_length = config.DATA_CONFIG['sequence_length']
+            self.normalize_range = config.DATA_CONFIG['normalize_range']
             
             # 初始化目录
             self._init_directories()
@@ -64,14 +67,6 @@ class DataManager:
             'charset': 'utf8mb4'
         })
         return db_config
-
-    def _init_data_config(self):
-        """初始化数据配置"""
-        system_config = config_instance.SYSTEM_CONFIG
-        self.cache_size = system_config['DATA_CONFIG']['cache_size']
-        self.batch_size = system_config['base_batch_size']
-        self.sequence_length = system_config['SAMPLE_CONFIG']['input_length']
-        self.normalize_range = system_config['DATA_CONFIG']['normalize_range']
 
     def _init_directories(self):
         """初始化目录结构"""

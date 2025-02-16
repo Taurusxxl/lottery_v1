@@ -98,3 +98,87 @@ class DataOptimizer:
         except Exception as e:
             logger.error(f"评估时间序列特性时出错: {str(e)}")
             return 0.0
+
+    def _calculate_trend(self, values):
+        """计算趋势"""
+        if len(values) < 2:
+            return "INSUFFICIENT_DATA"
+            
+        # 使用简单线性回归
+        x = np.arange(len(values))
+        slope = np.polyfit(x, values, 1)[0]
+        
+        if slope < -0.01:
+            return "IMPROVING"
+        elif slope > 0.01:
+            return "DEGRADING"
+        else:
+            return "STABLE"
+
+    def _compute_correlation(self, x1, x2):
+        """计算相关系数"""
+        try:
+            # 标准化
+            x1_norm = (x1 - np.mean(x1)) / np.std(x1)
+            x2_norm = (x2 - np.mean(x2)) / np.std(x2)
+            
+            # 计算相关系数
+            corr = np.mean(x1_norm * x2_norm)
+            return corr
+            
+        except Exception as e:
+            logger.error(f"计算相关系数时出错: {str(e)}")
+            return 0.0
+
+    def optimize_feature_selection(self, X, y, n_features=10):
+        """优化特征选择"""
+        try:
+            # 1. 计算特征重要性
+            importance = self._calculate_feature_importance(X, y)
+            
+            # 2. 计算特征冗余度
+            redundancy = self._calculate_feature_redundancy(X)
+            
+            # 3. 综合评分
+            final_score = importance * (1 - redundancy)
+            
+            # 4. 选择最优特征
+            selected = np.argsort(final_score)[-n_features:]
+            
+            return selected, final_score[selected]
+            
+        except Exception as e:
+            logger.error(f"优化特征选择时出错: {str(e)}")
+            return None, None
+    
+    def _calculate_feature_importance(self, X, y):
+        """计算特征重要性分数"""
+        try:
+            correlations = []
+            for i in range(X.shape[1]):
+                corr = np.abs(np.corrcoef(X[:, i], y)[0, 1])
+                correlations.append(corr)
+            return np.array(correlations)
+        except Exception as e:
+            logger.error(f"计算特征重要性时出错: {str(e)}")
+            return None
+
+    def _calculate_feature_redundancy(self, X):
+        """计算特征冗余度"""
+        try:
+            n_features = X.shape[1]
+            redundancy = np.zeros(n_features)
+            
+            for i in range(n_features):
+                correlations = []
+                for j in range(n_features):
+                    if i != j:
+                        corr = np.abs(np.corrcoef(X[:, i], X[:, j])[0, 1])
+                        correlations.append(corr)
+                redundancy[i] = np.mean(correlations)
+            
+            return redundancy
+            
+        except Exception as e:
+            logger.error(f"计算特征冗余度时出错: {str(e)}")
+            return None

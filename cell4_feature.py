@@ -482,16 +482,6 @@ class FeatureEngineering:
         
         return tf.concat([*correlations, *lag_correlations], axis=-1)
 
-    def _compute_correlation(self, x1, x2):
-        """计算相关系数"""
-        # 标准化
-        x1_norm = (x1 - tf.reduce_mean(x1)) / tf.math.reduce_std(x1)
-        x2_norm = (x2 - tf.reduce_mean(x2)) / tf.math.reduce_std(x2)
-        
-        # 计算相关系数
-        corr = tf.reduce_mean(x1_norm * x2_norm, axis=-1, keepdims=True)
-        return corr
-
     def _compute_lag_correlation(self, x, lag):
         """计算滞后相关性"""
         x_current = x[:, lag:]
@@ -889,6 +879,28 @@ class FeatureEngineering:
         except Exception as e:
             logger.error(f"添加时间编码时出错: {str(e)}")
             return x
+
+    def evaluate_model_feature_importance(self, model, X):
+        """评估模型特征重要性"""
+        try:
+            # 使用模型的权重评估特征重要性
+            feature_weights = model.get_layer('feature_layer').get_weights()[0]
+            importance = np.abs(feature_weights).mean(axis=1)
+            return importance
+            
+        except Exception as e:
+            logger.error(f"评估特征重要性时出错: {str(e)}")
+            return None
+    
+    def select_top_features(self, importance, top_k=10):
+        """选择最重要的特征"""
+        try:
+            top_indices = np.argsort(importance)[-top_k:]
+            return top_indices
+            
+        except Exception as e:
+            logger.error(f"选择重要特征时出错: {str(e)}")
+            return None
 
 # 创建全局实例
 feature_engineering = FeatureEngineering()

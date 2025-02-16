@@ -237,6 +237,14 @@ class PerformanceMonitor:
         # 创建保存目录
         os.makedirs(self.save_dir, exist_ok=True)
 
+        # 添加从cell1移入的性能指标相关代码
+        self.metrics.update({
+            'training_loss': deque(maxlen=1000),
+            'validation_loss': deque(maxlen=1000),
+            'learning_rates': deque(maxlen=1000),
+            'batch_times': deque(maxlen=100)
+        })
+
     def analyze_performance_trend(self, metric_name):
         """增强的性能趋势分析"""
         try:
@@ -268,6 +276,23 @@ class PerformanceMonitor:
         except Exception as e:
             logger.error(f"分析性能趋势时出错: {str(e)}")
             return None
+
+    def log_metric(self, metric_name: str, value: float):
+        """记录性能指标"""
+        if metric_name in self.metrics:
+            self.metrics[metric_name].append(value)
+            
+    def get_metrics_summary(self):
+        """获取性能指标摘要"""
+        return {
+            name: {
+                'mean': np.mean(values),
+                'min': np.min(values),
+                'max': np.max(values)
+            }
+            for name, values in self.metrics.items()
+            if values
+        }
 
     def _init_log_file(self):
         """初始化性能日志文件"""
@@ -575,6 +600,16 @@ class SystemManager:
         except Exception as e:
             logger.error(f"获取系统综合报告时出错: {str(e)}")
             return {}
+
+    def _test_config_system(self):
+        """测试配置系统完整性"""
+        try:
+            required_keys = ['host', 'port', 'user', 'password'] 
+            assert all(key in self.DB_CONFIG for key in required_keys), "数据库配置缺失必要参数"
+            logger.info("配置系统测试通过")
+        except AssertionError as e:
+            logger.error(f"配置系统测试失败: {str(e)}")
+            raise
 
 # 从cell1移入的LogDisplayManager
 class LogDisplayManager:
