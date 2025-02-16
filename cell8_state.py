@@ -1,4 +1,4 @@
-#16 状态管理\state_manager.py
+# State Management System / 状态管理系统
 import os
 import signal
 import logging

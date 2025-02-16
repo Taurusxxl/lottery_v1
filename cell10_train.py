@@ -1,4 +1,4 @@
-
+# Training Management System / 训练管理系统
 import tensorflow as tf
 import numpy as np
 import logging

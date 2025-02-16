@@ -1,23 +1,51 @@
-#3 内存管理工具\memory_utils.py
+# Utility Functions / 工具函数模块
 import os
 import gc
+import re
 import time
 import psutil
 import logging
 import tensorflow as tf
-from typing import Optional, Dict, Any
+from datetime import datetime, timedelta
+from typing import Dict, Any, Optional, Tuple
 
 # 获取logger
 logger = logging.getLogger(__name__)
 
+class DateUtils:
+    """日期处理工具类"""
+    
+    @staticmethod
+    def parse_issue(issue_str: str) -> Tuple[str, int]:
+        """解析期号字符串"""
+        match = re.match(r"(\d{8})-(\d{4})", issue_str)
+        if not match:
+            raise ValueError("无效的期号格式")
+        return match.group(1), int(match.group(2))
+    
+    @staticmethod
+    def get_next_issue(current_issue: str) -> str:
+        """获取下一期号"""
+        date_str, period = DateUtils.parse_issue(current_issue)
+        date = datetime.strptime(date_str, "%Y%m%d")
+        
+        if period == 1440:
+            new_date = date + timedelta(days=1)
+            new_period = 1
+        else:
+            new_date = date
+            new_period = period + 1
+        
+        return f"{new_date.strftime('%Y%m%d')}-{new_period:04d}"
+
 class MemoryManager:
-    """内存管理器 - 负责内存监控、优化和清理"""
+    """内存管理工具类"""
     
     def __init__(self, 
-                warning_threshold_mb: int = 8000,    # 8GB警告阈值
-                critical_threshold_mb: int = 10000,  # 10GB临界阈值
-                cleanup_interval: int = 300,         # 5分钟执行常规清理
-                full_cleanup_interval: int = 14400): # 4小时执行全面清理
+                warning_threshold_mb: int = 8000,
+                critical_threshold_mb: int = 10000,
+                cleanup_interval: int = 300,
+                full_cleanup_interval: int = 14400):
         """
         初始化内存管理器
         Args:
@@ -203,21 +231,31 @@ class MemoryManager:
         # 新增大样本优化策略
         self.enable_memmap = True  # 启用内存映射
         self.chunk_size = 10000    # 分块加载
-        tf.keras.backend.set_floatx('float16')  # 压缩精度 
+        tf.keras.backend.set_floatx('float16')  # 压缩精度
+        logger.info("已启用大数据优化策略")
 
     def optimize_for_hardware(self):
         """硬件定制优化"""
-        # 1. 限制TensorFlow内存使用
-        gpus = tf.config.list_physical_devices('GPU')
-        if gpus:
-            tf.config.set_logical_device_configuration(
-                gpus[0],
-                [tf.config.LogicalDeviceConfiguration(memory_limit=1536)]  # 限制1.5G显存
-            )
-        
-        # 2. 配置CPU并行线程
-        tf.config.threading.set_intra_op_parallelism_threads(6)  # 每个操作6线程
-        tf.config.threading.set_inter_op_parallelism_threads(4)   # 并行操作4线程
-        
-        # 3. 启用内存映射
-        self.enable_memmap = True 
+        try:
+            # 1. 限制TensorFlow内存使用
+            gpus = tf.config.list_physical_devices('GPU')
+            if gpus:
+                tf.config.set_logical_device_configuration(
+                    gpus[0],
+                    [tf.config.LogicalDeviceConfiguration(memory_limit=1536)]  # 限制1.5G显存
+                )
+            
+            # 2. 配置CPU并行线程
+            tf.config.threading.set_intra_op_parallelism_threads(6)  # 每个操作6线程
+            tf.config.threading.set_inter_op_parallelism_threads(4)  # 并行操作4线程
+            
+            # 3. 启用内存映射
+            self.enable_memmap = True
+            logger.info("已完成硬件优化配置")
+            
+        except Exception as e:
+            logger.error(f"硬件优化配置失败: {str(e)}")
+
+# 创建全局实例
+date_utils = DateUtils()
+memory_manager = MemoryManager()

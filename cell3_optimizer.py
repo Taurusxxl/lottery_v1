@@ -1,4 +1,4 @@
-#12 数据优化策略\data_optimizer.py
+# Data Optimization Module / 数据优化模块
 import numpy as np
 from scipy import stats
 from statsmodels.tsa.stattools import adfuller
