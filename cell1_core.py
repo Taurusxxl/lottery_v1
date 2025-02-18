@@ -1,4 +1,4 @@
-# Core Configuration Manager / 核心配置管理器
+#1 Core Configuration Manager / 核心配置管理器
 import os
 import json
 import logging
@@ -8,12 +8,13 @@ from collections import deque
 from IPython.display import clear_output
 from pathlib import Path
 from typing import Dict, Any, Optional
-from cell6_monitor import (
+from cell3_monitor import (
     DailyRotatingFileHandler, 
     CustomFormatter,
     ProgressHandler, 
     LogDisplayManager
 )
+import numpy as np  # 确保所有使用np的地方都有导入
 
 class CoreManager:
     """核心管理器 - 整合配置和日志管理"""
@@ -30,18 +31,19 @@ class CoreManager:
             self._init_directories()
             # 初始化日志系统
             self._init_logging_system()
-            # 初始化配置系统
+            # 初始化配置系统（需要最先完成）
             self._init_config_system()
             
             # 添加配置验证规则
             self.validation_rules = {
                 'learning_rate': lambda x: 0 < x < 1,
-                'batch_size': lambda x: x > 0 and x & (x-1) == 0  # 验证是否为2的幂
+                'batch_size': lambda x: x > 0 and x & (x-1) == 0
             }
             
             # 初始化时执行配置测试
             self._test_config_system()
             
+            # 最后设置初始化完成标记
             self.initialized = True
             self.logger.info("核心管理器初始化完成")
 
@@ -79,71 +81,66 @@ class CoreManager:
 
     def _init_config_system(self):
         """初始化配置系统"""
-        # 基础配置
-        self.DB_CONFIG = {
-            'host': 'localhost',
-            'user': 'root',
-            'port': 3306,
-            'password': 'tt198803',
-            'database': 'admin_data',  # 添加数据库名
-            'charset': 'utf8mb4'       # 添加字符集
-        }
-        
-        # 系统配置扩展
+        # 系统配置
         self.SYSTEM_CONFIG = {
-            'memory_limit': 8000,
-            'gpu_memory_limit': 4000,
-            'cleanup_interval': 300,
-            'log_retention_days': 7,
-            'check_interval': 60,  # 检查新期号的间隔
-            'AUTO_TUNING': {
-                'enable_per_sample': True,
-                'adjustment_steps': 5,
-                'learning_rate_range': (1e-5, 1e-2)
+            'TRAINING_CONFIG': {  # 添加训练配置
+                'batch_size': 64,
+                'max_epochs': 100,
+                'early_stopping_patience': 10,
+                'learning_rate': 0.001,
+                'model_checkpoint_interval': 5
             },
             'DATA_CONFIG': {
                 'cache_size': 10000,
+                'min_sequence_length': 14400,
                 'normalize_range': (-1, 1)
             },
-            'max_sequence_gap': 1,
-            'max_threads': 8,
-            'base_batch_size': 16,
-            'gpu_mem_limit': 1536,
-            'cpu_util_threshold': 70,
             'SAMPLE_CONFIG': {
-                'input_length': 144000,
-                'target_length': 2880,
-                'total_fetch': lambda: (
-                    self.SYSTEM_CONFIG['SAMPLE_CONFIG']['input_length'] 
-                    + self.SYSTEM_CONFIG['SAMPLE_CONFIG']['target_length']
-                )
+                'input_length': 14400,
+                'target_length': 2880
             }
         }
-
-        # 训练配置扩展
-        self.TRAINING_CONFIG = {
-            'max_epochs': 1,
-            'batch_size': 1,
-            'save_frequency': 100,
-            'eval_frequency': 50,
-            'lr_update_frequency': 200,
-            'min_improvement': 0.001
+        
+        # 单独的训练配置
+        self.TRAINING_CONFIG = self.SYSTEM_CONFIG['TRAINING_CONFIG']
+        
+        # 数据库配置
+        self.DB_CONFIG = {
+            'host': 'localhost',
+            'port': 3306,
+            'user': 'root',
+            'password': 'tt198803',
+            'database': 'admin_data',
+            'charset': 'utf8mb4'
         }
-
-        # Optuna配置
-        self.OPTUNA_CONFIG = {
-            "storage": "sqlite:///optuna.db",
-            "study_name": "prod_study_v1",
-            "timeout": 3600
+        
+        # 优化器配置
+        self.OPTIMIZER_CONFIG = {
+            'learning_rate': 0.001,
+            'beta_1': 0.9,
+            'beta_2': 0.999,
+            'epsilon': 1e-07
         }
-
-        # 添加数据配置部分
-        self.DATA_CONFIG = {
-            'cache_size': self.SYSTEM_CONFIG['DATA_CONFIG']['cache_size'],
-            'batch_size': self.SYSTEM_CONFIG['base_batch_size'],
-            'sequence_length': self.SYSTEM_CONFIG['SAMPLE_CONFIG']['input_length'],
-            'normalize_range': self.SYSTEM_CONFIG['DATA_CONFIG']['normalize_range']
+        
+        # 日志配置
+        self.LOG_CONFIG = {
+            'log_level': 'INFO',
+            'log_format': '%(asctime)s [%(levelname)s] %(name)s - %(message)s',
+            'log_file': 'system.log',
+            'log_retention_days': 7
         }
+        
+        # 模型配置
+        self.MODEL_CONFIG = {
+            'model_type': 'transformer',
+            'num_layers': 6,
+            'num_heads': 8,
+            'd_model': 512,
+            'dff': 2048,
+            'dropout_rate': 0.1
+        }
+        
+        self.logger.info("配置系统初始化完成")
 
     def update_config(self, config_name: str, updates: Dict[str, Any]) -> bool:
         """更新指定配置"""
@@ -497,9 +494,9 @@ class CoreManager:
         try:
             required_keys = ['host', 'port', 'user', 'password'] 
             assert all(key in self.DB_CONFIG for key in required_keys), "数据库配置缺失必要参数"
-            logger.info("配置系统测试通过")
+            self.logger.info("配置系统测试通过")
         except AssertionError as e:
-            logger.error(f"配置系统测试失败: {str(e)}")
+            self.logger.error(f"配置系统测试失败: {str(e)}")
             raise
 
     def validate_config_values(self, config: dict) -> bool:
@@ -508,7 +505,7 @@ class CoreManager:
         for key, rule in self.validation_rules.items():
             if key in config:
                 if not rule(config[key]):
-                    logger.warning(f"参数 {key} 的值 {config[key]} 无效")
+                    self.logger.warning(f"参数 {key} 的值 {config[key]} 无效")
                     valid = False
         return valid
 
@@ -586,19 +583,19 @@ class CustomFormatter(logging.Formatter):
         super().__init__()
         self.formatters = {
             logging.DEBUG: logging.Formatter(
-                '%(asctime)s - %(name)s - %(levellevel)s - %(message)s'
+                '[%(asctime)s] %(name)s - %(levelname)s - %(message)s'
             ),
             logging.INFO: logging.Formatter(
-                '%(asctime)s - %(levellevel)s - %(message)s'
+                '[%(asctime)s] %(levelname)s - %(message)s'
             ),
             logging.WARNING: logging.Formatter(
-                '%(asctime)s - %(levellevel)s - WARNING: %(message)s'  
+                '[%(asctime)s] WARNING - %(message)s'
             ),
             logging.ERROR: logging.Formatter(
-                '%(asctime)s - %(levellevel)s - ERROR: %(message)s\n%(pathname)s:%(lineno)d'
+                '[%(asctime)s] ERROR - %(message)s\n\tat %(pathname)s:%(lineno)d'
             ),
             logging.CRITICAL: logging.Formatter(
-                '%(asctime)s - %(levellevel)s - CRITICAL: %(message)s\n%(pathname)s:%(lineno)d\n%(exc_info)s'
+                '[%(asctime)s] CRITICAL - %(message)s\n\tat %(pathname)s:%(lineno)d\n%(exc_info)s'
             )
         }
     
