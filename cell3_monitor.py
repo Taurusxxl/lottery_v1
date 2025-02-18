@@ -97,13 +97,13 @@ class CustomFormatter(logging.Formatter):
                 '%(asctime)s - %(levelname)s - %(message)s'
             ),
             logging.WARNING: logging.Formatter(
-                '%(asctime)s - %(levelname)s - WARNING: %(message)s'
+                '%(asctime)s - %(levellevel)s - WARNING: %(message)s'
             ),
             logging.ERROR: logging.Formatter(
-                '%(asctime)s - %(levelname)s - ERROR: %(message)s\n%(pathname)s:%(lineno)d'
+                '%(asctime)s - %(levellevel)s - ERROR: %(message)s\n%(pathname)s:%(lineno)d'
             ),
             logging.CRITICAL: logging.Formatter(
-                '%(asctime)s - %(levelname)s - CRITICAL: %(message)s\n%(pathname)s:%(lineno)d\n%(exc_info)s'
+                '%(asctime)s - %(levellevel)s - CRITICAL: %(message)s\n%(pathname)s:%(lineno)d\n%(exc_info)s'
             )
         }
     
@@ -236,6 +236,23 @@ class PerformanceMonitor:
         from cell2_utils import memory_manager
         self.memory_monitor = memory_manager
 
+        # 修改每小时保存一次,而不是每5分钟
+        self.save_interval = 3600  # 每小时保存一次
+        
+        # 合并小文件的阈值
+        self.merge_threshold = 10  # 当文件数超过10个时合并
+        
+        # 添加文件合并锁
+        self._merge_lock = threading.Lock()
+        
+        # 添加文件写入控制参数
+        self.last_save_time = time.time()
+        self.metrics_buffer = []  # 临时缓存区
+        self.max_buffer_size = 1000  # 最大缓存条数
+        
+        # 确保目录存在
+        os.makedirs(save_dir, exist_ok=True)
+
     def _monitor_loop(self):
         """性能监控主循环"""
         while self._running:
@@ -276,20 +293,98 @@ class PerformanceMonitor:
         logger.info("性能监控已停止")
 
     def _save_metrics(self):
-        """保存指标到文件"""
+        """保存指标到文件(优化版)"""
+        current_time = time.time()
+        
         try:
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = os.path.join(self.save_dir, f"metrics_{timestamp}.json")
+            # 只有达到保存间隔或缓存满时才保存
+            should_save = (
+                current_time - self.last_save_time >= self.save_interval or
+                len(self.metrics_buffer) >= self.max_buffer_size
+            )
             
-            metrics_to_save = {
-                k: list(v) for k, v in self.metrics.items()
-            }
-            
-            with open(filename, 'w') as f:
-                json.dump(metrics_to_save, f)
+            if not should_save:
+                return
+                
+            with self._merge_lock:
+                # 生成当天的文件名
+                today = datetime.now().strftime("%Y%m%d")
+                filename = os.path.join(self.save_dir, f"metrics_{today}.json")
+                
+                # 读取现有数据
+                existing_data = []
+                if os.path.exists(filename):
+                    with open(filename, 'r') as f:
+                        existing_data = json.load(f)
+                
+                # 合并数据并去重
+                all_data = existing_data + self.metrics_buffer
+                
+                # 写入文件
+                with open(filename, 'w') as f:
+                    json.dump(all_data, f)
+                
+                # 清空缓存
+                self.metrics_buffer = []
+                self.last_save_time = current_time
+                
+                # 检查是否需要合并历史文件
+                self._merge_old_files()
                 
         except Exception as e:
             logger.error(f"保存性能指标失败: {str(e)}")
+
+    def _merge_old_files(self):
+        """合并历史文件"""
+        try:
+            files = [f for f in os.listdir(self.save_dir) if f.startswith('metrics_')]
+            if len(files) <= self.merge_threshold:
+                return
+                
+            # 按日期分组
+            by_date = {}
+            for f in files:
+                date = f.split('_')[1][:6]  # 取年月
+                if date not in by_date:
+                    by_date[date] = []
+                by_date[date].append(f)
+            
+            # 合并每个月的文件
+            for date, month_files in by_date.items():
+                if len(month_files) > 1:
+                    merged_data = []
+                    for f in month_files:
+                        with open(os.path.join(self.save_dir, f), 'r') as fin:
+                            merged_data.extend(json.load(fin))
+                            os.remove(os.path.join(self.save_dir, f))
+                    
+                    # 写入合并后的文件
+                    merged_file = os.path.join(self.save_dir, f"metrics_{date}_merged.json")
+                    with open(merged_file, 'w') as fout:
+                        json.dump(merged_data, fout)
+                        
+            logger.info("完成历史文件合并")
+            
+        except Exception as e:
+            logger.error(f"合并历史文件失败: {str(e)}")
+
+    def cleanup_old_files(self, max_days=7):
+        """清理旧的指标文件"""
+        try:
+            now = datetime.now()
+            for file in os.listdir(self.save_dir):
+                if not file.startswith('metrics_'):
+                    continue
+                    
+                file_path = os.path.join(self.save_dir, file)
+                file_time = datetime.strptime(file.split('_')[1].split('.')[0], "%Y%m%d")
+                
+                if (now - file_time).days > max_days:
+                    os.remove(file_path)
+                    logger.info(f"已删除旧指标文件: {file}")
+                    
+        except Exception as e:
+            logger.error(f"清理旧指标文件失败: {str(e)}")
 
 class SystemManager:
     """系统管理器 - 单例模式"""
